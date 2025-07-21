@@ -33,3 +33,18 @@ layout = pn.Column(
 )
 
 layout.servable()
+
+
+import ipywidgets as widgets
+from IPython.display import display
+
+name = widgets.Text(description='Name:')
+age = widgets.IntSlider(description='Age:', min=0, max=100)
+button = widgets.Button(description="Submit")
+
+def on_button_click(b):
+    print(f"Name: {name.value}, Age: {age.value}")
+
+button.on_click(on_button_click)
+
+display(name, age, button)
