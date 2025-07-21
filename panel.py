@@ -1,6 +1,7 @@
 import ipywidgets as widgets
 from IPython.display import display, HTML, clear_output
 import pandas as pd
+from pdf2image import convert_from_path
 
 # Simulated backend functions
 def extract_fields_from_pdf(doc_id):
@@ -34,6 +35,17 @@ fields_output = widgets.Output()
 form1_output = widgets.Output()
 form2_output = widgets.Output()
 
+
+def show_pdf_preview(doc_id, max_pages=3):
+    pdf_path = f"./pdfs/{doc_id}.pdf"
+    try:
+        images = convert_from_path(pdf_path, dpi=100, first_page=1, last_page=max_pages)
+        for img in images:
+            display(img)
+    except Exception as e:
+        display(HTML(f"<p style='color:red;'>Failed to load PDF: {str(e)}</p>"))
+
+
 def start_compare(b):
     doc_id = doc_input.value.strip()
     data_id = data_input.value.strip()
@@ -47,6 +59,7 @@ def start_compare(b):
     # Panel 1: PDF Viewer
     with pdf_output:
         display(HTML(f"<h4>Simulated PDF Path</h4><p>/path/to/pdf/{doc_id}.pdf</p>"))
+        show_pdf_preview(doc_id, max_pages=5)
 
     # Panel 2: Extracted Fields
     df = extract_fields_from_pdf(doc_id)
